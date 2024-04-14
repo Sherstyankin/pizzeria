@@ -1,64 +1,80 @@
 package org.aston.registrationservice.security;
 
+import lombok.RequiredArgsConstructor;
+import org.aston.registrationservice.security.jwt.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig {
+@RequiredArgsConstructor
 
-        @SuppressWarnings({"deprecation", "unused"})
-        @Bean
-        public static NoOpPasswordEncoder passwordEncoder() {
-            return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-        }
+public class WebSecurityConfig extends WebSecurityConfiguration {
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final JwtRequestFilter jwtRequestFilter;
 
-        @SuppressWarnings({"unused"})
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
-                    .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(Customizer.withDefaults())
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/", "/home", "/static/**", "/WEB-INF/templates/**").permitAll()
-//                        .requestMatchers("/login", "/info", "/registration").anonymous()
-//                        .requestMatchers("/logout").authenticated()
-//                        .requestMatchers("/add**").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .logout(Customizer.withDefaults());
 
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/","/static/**", "/pizzeria","/login", "/info", "/img/**", "/css/**", "/registration").permitAll()
-                            // .requestMatchers("/adminpage/**").hasRole(Role.ADMIN.name())
-                            .requestMatchers("/orderpage").authenticated()
-                            // .requestMatchers(antMatcher("/client/{\\d}/delete")).hasAnyAuthority(Role.ADMIN.getAuthority(), Role.USER.getAuthority())
-                            .requestMatchers( "/api/**").anonymous()
-                            .anyRequest().authenticated())
-                    .formLogin(login -> login
-                            .loginPage("/login")
-                            .defaultSuccessUrl("/orderpage")
-                            .permitAll())
-                    .logout(logout -> logout
-                            .logoutUrl("/logout")
-                            .deleteCookies("JSESSIONID"));
-            return http.build();
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/static/**", "/pizzeria", "/login", "/img/**", "/css/**", "/registration").permitAll()
+                        // .requestMatchers("/adminpage/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/orderpage", "/info", "/secured").authenticated()
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        // .requestMatchers(antMatcher("/client/{\\d}/delete")).hasAnyAuthority(Role.ADMIN.getAuthority(), Role.USER.getAuthority())
+                        .requestMatchers("/api/**").anonymous()
+                        .anyRequest().authenticated())
+                // .apply(new JwtConfigurer(jwtTokenProvider))
+                .formLogin(login -> login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/orderpage")
+                        .permitAll())
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/logout"));
 
-//        @SuppressWarnings({"unused"})
-//        @Bean
-//        public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-//            return new HandlerMappingIntrospector();
-//        }
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsServiceImpl);
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+
 
     }
+}

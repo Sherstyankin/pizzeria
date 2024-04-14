@@ -1,6 +1,8 @@
 package org.aston.registrationservice.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aston.registrationservice.dto.JwtRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -16,17 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 @SuppressWarnings({"unused"})
 public class LoginController {
 
-//    @GetMapping("/orderpage")
-//    public ModelAndView hello(ModelAndView mv) {
-//        mv.setViewName("orderpage");
-//        return mv;
-//    }
-
-
-//        @PostMapping("/login")
-//        public String login(){
-//            return "redirect:/orderpage";
-//        }
 
 
     @Secured({"ADMIN", "USER"})
@@ -50,4 +42,10 @@ public class LoginController {
     public String registration() {
         return "registration";
     }
+
+
+//    @PostMapping("/registration")
+//    public ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
+//        return authService.createNewUser(registrationUserDto);
+//    }
 }

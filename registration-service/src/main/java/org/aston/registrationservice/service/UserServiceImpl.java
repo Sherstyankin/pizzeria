@@ -11,6 +11,7 @@ import org.aston.registrationservice.mapper.UserMapper;
 import org.aston.registrationservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+   // private final BCryptPasswordEncoder passwordEncoder;
 @Autowired
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserDto registerUser(@Valid UserDto userDto) {
         User user = userMapper.toUser(userDto);
         user.setRole(Role.USER);
+       // user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
         return userMapper.toUserDto(user);
     }
