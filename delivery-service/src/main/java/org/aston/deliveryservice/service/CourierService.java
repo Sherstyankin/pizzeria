@@ -1,28 +1,28 @@
 package org.aston.deliveryservice.service;
 
-import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.aston.deliveryservice.constants.CourierStatus;
 import org.aston.deliveryservice.entity.Courier;
 import org.aston.deliveryservice.repository.CourierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import jakarta.annotation.PostConstruct;
-
 @Service
 public class CourierService {
+
     @Autowired
     private CourierRepository repository;
 
-    public List<Courier> getFreeCouriers() {
-        return repository.getFreeCouriers();
+    public Courier get() {
+        var free = repository.getFree();
+        if(free.size() == 0) {
+            throw new NoSuchElementException("All couriers are busy");
+        } else {
+            return free.stream().findAny().get();
+        }
     }
-    
-    @PostConstruct
-    private void init() {
-        repository.save(Courier.builder().name("John").status(CourierStatus.SLEEP).build());
-        repository.save(Courier.builder().name("Katrine").status(CourierStatus.SLEEP).build());
-        repository.save(Courier.builder().name("Stephen").status(CourierStatus.SLEEP).build());
+
+    public void changeStatus(Courier courier, CourierStatus status) {
+        repository.setStatus(courier.getId(), CourierStatus.IN_PROGRESS);
     }
 }
