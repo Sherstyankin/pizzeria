@@ -9,9 +9,9 @@ CREATE TABLE pizza_ids
 
 CREATE TABLE orders
 (
-    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id  BIGINT NOT NULL,
-    status   varchar(20) NOT NULL
+    id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT      NOT NULL,
+    status  varchar(20) NOT NULL
 );
 
 ALTER TABLE pizza_ids
