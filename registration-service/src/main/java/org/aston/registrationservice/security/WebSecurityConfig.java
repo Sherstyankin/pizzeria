@@ -10,11 +10,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -23,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 
-public class WebSecurityConfig extends WebSecurityConfiguration {
+public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JwtRequestFilter jwtRequestFilter;
 
@@ -37,13 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfiguration {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/static/**", "/pizzeria", "/login", "/img/**", "/css/**", "/registration").permitAll()
-                        // .requestMatchers("/adminpage/**").hasRole(Role.ADMIN.name())
                         .requestMatchers("/orderpage", "/info", "/secured").authenticated()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        // .requestMatchers(antMatcher("/client/{\\d}/delete")).hasAnyAuthority(Role.ADMIN.getAuthority(), Role.USER.getAuthority())
                         .requestMatchers("/api/**").anonymous()
                         .anyRequest().authenticated())
-                // .apply(new JwtConfigurer(jwtTokenProvider))
                 .formLogin(login -> login
                         .loginPage("/login")
                         .defaultSuccessUrl("/orderpage")
@@ -66,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

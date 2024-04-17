@@ -4,9 +4,9 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-  main:
-    allow-bean-definition-overriding: true
-    allow-circular-references: true
+#  main:
+#    allow-bean-definition-overriding: true
+#    allow-circular-references: true
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -18,7 +18,7 @@ spring:
     properties:
       hibernate:
         ddl-auto: update
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 
   liquibase:
       change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -28,7 +28,7 @@ server:
     context-path: /
 jwt:
   secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
-  lifetime: 20m
+  lifetime: 15m
 
 
 
@@ -37,7 +37,7 @@ jwt:
 logging:
   level:
     root: WARN
-    org.aston.registrationservice: INFO
+    org.aston.registration-service: INFO
   file:
     name: by.nata
     path: /

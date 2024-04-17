@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -13,8 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "DELIVERED_ORDERS")
-@NamedQuery(name = "Pizza.findAllPizzaByUserId", query = "SELECT o FROM Pizza o WHERE o.user.id = :userId")
+@Table(name = "PIZZAS")
 public class Pizza {
     @Id
     @Column(name = "ID")

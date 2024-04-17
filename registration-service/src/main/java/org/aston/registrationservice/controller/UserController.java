@@ -9,13 +9,9 @@ import org.aston.registrationservice.exceptions.AppError;
 import org.aston.registrationservice.repository.UserRepository;
 import org.aston.registrationservice.service.AuthService;
 import org.aston.registrationservice.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,10 +25,11 @@ public class UserController {
     private final UserRepository userRepository;
 
 
-    @PostMapping(value = "/api/users/{id}")
+
+    @PostMapping(value = "/api/users")
     public ResponseEntity<?> registerNewUser(@RequestBody UserDto userDto) {
+      //  String encodedPassword = bCryptPasswordEncoder.encode(userDto.password());
         if (userRepository.existsByUsername(userDto.username())) {
-           // return ResponseEntity.badRequest().build();
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
                     "Пользователь с указанным именем уже существует"), HttpStatus.BAD_REQUEST);
         }

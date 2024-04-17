@@ -1,6 +1,7 @@
 package org.aston.registrationservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ public class Main {
         }
 
         @GetMapping("/admin")
+        @Secured("ADMIN")
         public String adminData(){
             return "Admin data";
         }

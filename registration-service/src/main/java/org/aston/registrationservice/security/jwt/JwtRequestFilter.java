@@ -24,14 +24,12 @@ import java.util.stream.Collectors;
 public class JwtRequestFilter extends OncePerRequestFilter{
 
         private final JwtTokenUtils jwtTokenUtils;
-      //  private final UserDetailsServiceImpl userDetailsServiceImpl;
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                         FilterChain filterChain) throws ServletException, IOException {
             String authHeader = request.getHeader("Authorization");
             String username = null;
-            //UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
             String jwt = null;
 
             if (authHeader != null && authHeader.startsWith("Bearer")){

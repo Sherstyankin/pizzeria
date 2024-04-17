@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(10)
 );
 
-CREATE TABLE IF NOT EXISTS delivered_orders (
+CREATE TABLE IF NOT EXISTS pizzas (
     id SERIAL PRIMARY KEY,
     pizza_name VARCHAR(50) NOT NULL,
     count INT NOT NULL,
@@ -20,24 +20,7 @@ CREATE TABLE IF NOT EXISTS delivered_orders (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
---create table user (
--- id INT(255) NOT NULL,
--- username VARCHAR(50) NOT NULL UNIQUE,
--- password VARCHAR(100) NOT NULL,
--- email VARCHAR(100) NOT NULL UNIQUE,
--- address VARCHAR(256) NOT NULL,
--- role VARCHAR(5),
--- PRIMARY KEY (id)
---);
 
---CREATE TABLE  DELIVERED_ORDERS (
--- id INT(255)  NOT NULL,
--- pizza_name VARCHAR(50) NOT NULL,
--- count INT(50) NOT NULL,
--- user_id INT(255) NOT NULL,
--- PRIMARY KEY (id),
--- FOREIGN KEY (user_id) REFERENCES user(id)
---);
 
 insert into users ( username, password, email, address, role)
 values ('nata', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'nata@gmail.com', 'Sadovay 5,35', 'USER'),
@@ -45,4 +28,4 @@ values ('nata', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 
 
 
 --rollback truncate table users;
---rollback truncate table delivered_orders;
+--rollback truncate table pizzas;

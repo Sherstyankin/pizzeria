@@ -27,11 +27,13 @@ public class PizzaServiceImpl implements PizzaService {
         validateDeliveredOrderById(id);
         Optional<Pizza> order = pizzaRepository.findById(id);
         return order.map(pizzaMapper::toPizzaDto).orElse(null);
-    }
-    @Override
-    public List<PizzaDto> findAllPizzaByUserId (Long userId){
 
-        List<Pizza> pizzas = pizzaRepository.findAllPizzaByUserId(userId);
+    }
+
+    @Override
+    public List<PizzaDto> findAllByUser_Id (Long userId){
+
+        List<Pizza> pizzas = pizzaRepository.findAllByUser_Id(userId);
         return pizzas.stream()
                 .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
                 .collect(Collectors.toList());
