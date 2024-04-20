@@ -3,7 +3,7 @@
 --comment first migration
 
 
-CREATE TABLE IF NOT EXISTS users (
+create TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(128),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(10)
 );
 
-CREATE TABLE IF NOT EXISTS pizzas (
+create TABLE IF NOT EXISTS pizzas (
     id SERIAL PRIMARY KEY,
     pizza_name VARCHAR(50) NOT NULL,
     count INT NOT NULL,

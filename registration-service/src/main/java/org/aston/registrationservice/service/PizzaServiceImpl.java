@@ -1,26 +1,29 @@
 package org.aston.registrationservice.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aston.registrationservice.dto.PizzaDto;
 import org.aston.registrationservice.entity.Pizza;
+import org.aston.registrationservice.entity.User;
 import org.aston.registrationservice.exceptions.ObjectNotFoundException;
 import org.aston.registrationservice.mapper.PizzaMapper;
 import org.aston.registrationservice.repository.PizzaRepository;
+import org.aston.registrationservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PizzaServiceImpl implements PizzaService {
     private final PizzaRepository pizzaRepository;
     private final PizzaMapper pizzaMapper;
-@Autowired
-    public PizzaServiceImpl(PizzaRepository pizzaRepository, PizzaMapper pizzaMapper) {
-        this.pizzaRepository = pizzaRepository;
-        this.pizzaMapper = pizzaMapper;
-    }
+    private final UserRepository userRepository;
+
 
     @Override
     public PizzaDto getPizzaById(Long id) {
@@ -30,52 +33,64 @@ public class PizzaServiceImpl implements PizzaService {
 
     }
 
-    @Override
-    public List<PizzaDto> findAllByUser_Id (Long userId){
-
-        List<Pizza> pizzas = pizzaRepository.findAllByUser_Id(userId);
-        return pizzas.stream()
-                .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
-                .collect(Collectors.toList());
-    }
 
 
 
     @Override
     public List<PizzaDto> getAllPizzas() {
         List<Pizza> orders = pizzaRepository.findAll();
-        return orders.stream().map(pizzaMapper::toPizzaDto).collect(Collectors.toList());
+        return orders.stream()
+                .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public PizzaDto saveNewPizza(PizzaDto pizzaDto) {
-        Pizza order = pizzaMapper.toPizza(pizzaDto);
-        order = pizzaRepository.save(order);
-        return pizzaMapper.toPizzaDto(order);
-    }
 
-    @Override
-    public PizzaDto updatePizza(Long id, PizzaDto pizzaDto) {
-        validateDeliveredOrderById(id);
-        Pizza order = pizzaRepository.findById(id).get();
+    public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
-        if (pizzaDto != null) {
-            order.setCount(pizzaDto.count());
+        List<Pizza> pizzas = new ArrayList<>();
+        for (PizzaDto pizzaDto : pizzaDtos) {
+            Pizza pizza = new Pizza();
+            pizza.setId(pizzaDto.id());
+            pizza.setPizza_name(pizzaDto.pizza_name());
+            pizza.setCount(pizzaDto.count());
+            pizza.setUser(user);
+            pizzas.add(pizza);
         }
-        order = pizzaRepository.save(order);
-        return pizzaMapper.toPizzaDto(order);
 
+        List<Pizza> savedPizzas = pizzaRepository.saveAll(pizzas);
+
+        return savedPizzas.stream()
+                .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
+                .collect(Collectors.toList());
     }
+
 
     @Override
-    public void deletePizza(Long id) {
-        validateDeliveredOrderById(id);
-        pizzaRepository.deleteById(id);
+    public List<PizzaDto> updatePizza(Long id, List<PizzaDto> pizzaDtos) {
+
+        List<PizzaDto> updatedPizzas = new ArrayList<>();
+        for (PizzaDto pizzaDto : pizzaDtos) {
+            Pizza pizza = pizzaRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Pizza not found with ID: " + id));
+
+            pizza.setCount(pizzaDto.count());
+
+            pizza = pizzaRepository.save(pizza);
+
+            updatedPizzas.add(pizzaMapper.toPizzaDto(pizza));
+        }
+
+        return updatedPizzas;
     }
+
+
 
     private void validateDeliveredOrderById(Long id) {
         if (!pizzaRepository.existsById(id)) {
             throw new ObjectNotFoundException("Pizza with id = " + id + " doesn't exist.");
         }
     }
+
 }

@@ -3,7 +3,6 @@ package org.aston.registrationservice.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +18,7 @@ public class Pizza {
     private Long id;
 
     @Column(name = "PIZZA_NAME")
-    private List<String> pizza_name;
+    private String pizza_name;
 
     @Column(name = "COUNT")
     private Integer count;

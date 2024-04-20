@@ -1,18 +1,11 @@
 spring:
   application:
     name: registration-service
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
-#  main:
-#    allow-bean-definition-overriding: true
-#    allow-circular-references: true
-
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pizzeria
-    username: postgres
-    password: root
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/pizzeria
+      username: postgres
+      password: root
   jpa:
     show-sql: true
     properties:
@@ -21,7 +14,7 @@ spring:
 
 
   liquibase:
-      change-log: classpath:db/changelog/db.changelog-master.yaml
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 server:
   port: 8080
   servlet:
@@ -33,12 +26,4 @@ jwt:
 
 
 
-
-logging:
-  level:
-    root: WARN
-    org.aston.registration-service: INFO
-  file:
-    name: by.nata
-    path: /
 

@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "pizza_name": "Pepperoni",
+    "count": 2,
+    "user": {
+      "id": 2,
+      "username": "admin",
+      "password": "100",
+      "email": "admin@gmail.com",
+      "address": "Tyrova 3, 55",
+      "role": "ADMIN"
+    }
+  },
+  {
+    "id": 2,
+    "pizza_name": "Margarita",
+    "count": 3,
+    "user": {
+      "id": 2,
+      "username": "admin",
+      "password": "100",
+      "email": "admin@gmail.com",
+      "address": "Tyrova 3, 55",
+      "role": "ADMIN"
+    }
+  }
+]
