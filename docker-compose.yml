@@ -23,3 +23,75 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DRIVER=org.postgresql.Driver
+
+  registration-service:
+    build: ./registration-service
+    container_name: registration-service
+    ports:
+      - "9096:9095"
+    depends_on:
+      - registration-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://registration-db:5432/orders
+      - SPRING_DATASOURCE_USER=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
+
+  registration-db:
+    image: postgres:14-alpine
+    container_name: registration-db
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB=orders
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
+
+  delivery-service:
+    build: ./delivery-service
+    container_name: delivery-service
+    ports:
+      - "9097:9095"
+    depends_on:
+      - delivery-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://delivery-db:5432/deliveries
+      - SPRING_DATASOURCE_USER=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
+
+  delivery-db:
+    image: postgres:14-alpine
+    container_name: delivery-db
+    ports:
+      - "6544:5432"
+    environment:
+      - POSTGRES_DB=deliveries
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
+
+  kitchen-service:
+    build: ./kitchen-service
+    container_name: kitchen-service
+    ports:
+      - "9098:9095"
+    depends_on:
+      - kitchen-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://kitchen-db:5432/pizzas
+      - SPRING_DATASOURCE_USER=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
+
+  kitchen-db:
+    image: postgres:14-alpine
+    container_name: kitchen-db
+    ports:
+      - "6545:5432"
+    environment:
+      - POSTGRES_DB=pizzas
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DRIVER=org.postgresql.Driver
