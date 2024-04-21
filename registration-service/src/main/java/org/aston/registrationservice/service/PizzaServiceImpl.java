@@ -1,7 +1,6 @@
 package org.aston.registrationservice.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.aston.registrationservice.dto.PizzaDto;
 import org.aston.registrationservice.entity.Pizza;
 import org.aston.registrationservice.entity.User;
@@ -9,13 +8,13 @@ import org.aston.registrationservice.exceptions.ObjectNotFoundException;
 import org.aston.registrationservice.mapper.PizzaMapper;
 import org.aston.registrationservice.repository.PizzaRepository;
 import org.aston.registrationservice.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,37 +33,45 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
 
-
-
     @Override
     public List<PizzaDto> getAllPizzas() {
         List<Pizza> orders = pizzaRepository.findAll();
-        return orders.stream()
-                .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
-                .collect(Collectors.toList());
+        return orders.stream().map(pizzaMapper::toPizzaDto).collect(Collectors.toList());
+
     }
 
 
-    public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
-        List<Pizza> pizzas = new ArrayList<>();
-        for (PizzaDto pizzaDto : pizzaDtos) {
-            Pizza pizza = new Pizza();
-            pizza.setId(pizzaDto.id());
-            pizza.setPizza_name(pizzaDto.pizza_name());
-            pizza.setCount(pizzaDto.count());
+@Override
+public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+    List<Pizza> pizzas = new ArrayList<>();
+
+    for (PizzaDto pizzaDto : pizzaDtos) {
+        List<Pizza> existingPizzas = pizzaRepository.findByUserIdAndPizzaName(userId, pizzaDto.pizzaName());
+        if (!existingPizzas.isEmpty()) {
+            Pizza existingPizza = existingPizzas.get(0);
+            existingPizza.setCount(existingPizza.getCount() + pizzaDto.count()); // Увеличиваем количество пиццы
+            // Обновляем существующую пиццу в базе данных
+            pizzaRepository.save(existingPizza);
+        } else {
+            Pizza pizza = pizzaMapper.toPizza(pizzaDto);
             pizza.setUser(user);
             pizzas.add(pizza);
         }
-
-        List<Pizza> savedPizzas = pizzaRepository.saveAll(pizzas);
-
-        return savedPizzas.stream()
-                .map(pizza -> new PizzaDto(pizza.getId(), pizza.getPizza_name(), pizza.getCount(), pizza.getUser()))
-                .collect(Collectors.toList());
     }
+
+    // Сохраняем новые пиццы
+    List<Pizza> savedPizzas = pizzaRepository.saveAll(pizzas);
+
+    // Обновляем список pizzaDtos с обновленными и новыми пиццами
+    List<PizzaDto> updatedPizzaDtos = Stream.concat(savedPizzas.stream().map(pizzaMapper::toPizzaDto), pizzaDtos.stream())
+            .collect(Collectors.toList());
+
+    return updatedPizzaDtos;
+}
 
 
     @Override
@@ -85,7 +92,13 @@ public class PizzaServiceImpl implements PizzaService {
         return updatedPizzas;
     }
 
-
+    @Override
+    public List<PizzaDto> getPizzasByUserId(Long userId) {
+        List<Pizza> pizzas = pizzaRepository.findByUserId(userId);
+        return pizzas.stream()
+                .map(pizzaMapper::toPizzaDto)
+                .collect(Collectors.toList());
+    }
 
     private void validateDeliveredOrderById(Long id) {
         if (!pizzaRepository.existsById(id)) {
