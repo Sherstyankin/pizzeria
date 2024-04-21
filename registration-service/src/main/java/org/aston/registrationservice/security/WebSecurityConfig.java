@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/orderpage")
                         .permitAll())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/logout"));
 

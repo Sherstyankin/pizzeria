@@ -4,12 +4,16 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.aston.registrationservice.dto.PizzaDto;
+import org.aston.registrationservice.entity.Pizza;
+import org.aston.registrationservice.entity.User;
 import org.aston.registrationservice.service.PizzaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,5 +64,20 @@ public class PizzaController {
         }
     }
 
+    @GetMapping("/api/pizzas/users/{userId}")
+    public ResponseEntity<List<PizzaDto>> getPizzasByUserId(@PathVariable Long userId) {
+        List<PizzaDto> pizzas = pizzaService.getPizzasByUserId(userId);
+        if (pizzas.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        } else {
+            return ResponseEntity.ok(pizzas);
+        }
+    }
 
+//    @GetMapping("/api/pizzas/find/pizzaname")
+//    public ResponseEntity<?> findPizzaByUserAndName(@RequestParam User user, @RequestParam String pizzaName) {
+//        Optional<Pizza> pizzaOpt = pizzaService.findByUser_IdAndPizzaName(user, pizzaName);
+//        return pizzaOpt.map(pizza -> ResponseEntity.ok().body(pizza))
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 }

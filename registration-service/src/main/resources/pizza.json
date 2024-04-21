@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "pizza_name": "Pepperoni",
+    "pizzaName": "Pepperoni",
     "count": 2,
     "user": {
       "id": 2,
@@ -14,7 +14,7 @@
   },
   {
     "id": 2,
-    "pizza_name": "Margarita",
+    "pizzaName": "Margarita",
     "count": 3,
     "user": {
       "id": 2,

@@ -12,13 +12,16 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "PIZZAS")
+@NamedQuery(name = "Pizza.findByUserIdAndPizzaName",
+        query = "SELECT p FROM Pizza p WHERE p.user.id = :userId AND p.pizzaName = :pizzaName")
 public class Pizza {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
     @Column(name = "PIZZA_NAME")
-    private String pizza_name;
+    private String pizzaName;
 
     @Column(name = "COUNT")
     private Integer count;
