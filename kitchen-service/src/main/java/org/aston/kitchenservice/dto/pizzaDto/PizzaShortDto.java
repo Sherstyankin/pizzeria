@@ -1,10 +1,9 @@
-package org.aston.kitchenservice.dto;
+package org.aston.kitchenservice.dto.pizzaDto;
 
 import lombok.Builder;
 
 @Builder
-public record PizzaDto(
-        Long id,
+public record PizzaShortDto(
         String name,
         String description
 ) {

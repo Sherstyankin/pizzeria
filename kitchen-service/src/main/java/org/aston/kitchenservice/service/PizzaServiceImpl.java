@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.aston.kitchenservice.client.DeliveryClient;
 import org.aston.kitchenservice.dto.DeliveryDto;
 import org.aston.kitchenservice.dto.OrderDto;
-import org.aston.kitchenservice.dto.PizzaDto;
+import org.aston.kitchenservice.dto.pizzaDto.PizzaDto;
 import org.aston.kitchenservice.entity.Pizza;
 import org.aston.kitchenservice.exception.pizza.PizzaNotFoundException;
 import org.aston.kitchenservice.mapper.PizzaMapper;
@@ -23,12 +23,14 @@ public class PizzaServiceImpl implements PizzaService {
 
     @Override
     public PizzaDto create(PizzaDto pizzaDto) {
+
         pizzaRepository.save(PizzaMapper.INSTANCE.toPizza(pizzaDto));
         return pizzaDto;
     }
 
     @Override
     public List<PizzaDto> getAll() {
+
         return pizzaRepository.findAll()
                 .stream()
                 .map(PizzaMapper.INSTANCE::toPizzaDto)
@@ -37,23 +39,30 @@ public class PizzaServiceImpl implements PizzaService {
 
     @Override
     public PizzaDto getById(long id) {
+
         return PizzaMapper.INSTANCE.toPizzaDto(getPizza(id));
     }
 
     @Override
-    public void makePizza(OrderDto orderDto) {
-        List<Pizza> pizzas = orderDto.pizzasId().stream()
+    public DeliveryDto makePizza(OrderDto orderDto) {
+
+        List<Pizza> pizzas = orderDto.pizzaIds().stream()
                 .map(this::getPizza).toList();
+
 
         DeliveryDto deliveryDto = DeliveryDto.builder()
                 .pizzaList(pizzas)
                 .orderId(orderDto.orderId())
                 .build();
 
-        deliveryClient.sendDeliveryDto(deliveryDto);
+        //deliveryClient.sendDeliveryDto(deliveryDto);
+
+        return deliveryDto;
     }
 
     private Pizza getPizza(long id) {
-        return pizzaRepository.findById(id).orElseThrow(() -> new PizzaNotFoundException(id));
+
+        return pizzaRepository.findById(id)
+                .orElseThrow(() -> new PizzaNotFoundException(id));
     }
 }
