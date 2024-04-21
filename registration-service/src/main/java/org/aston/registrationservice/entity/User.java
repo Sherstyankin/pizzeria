@@ -1,14 +1,8 @@
 package org.aston.registrationservice.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -39,7 +33,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
     private Role role;
-
 
 
 }

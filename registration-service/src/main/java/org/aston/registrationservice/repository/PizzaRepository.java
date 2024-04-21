@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PizzaRepository extends JpaRepository<Pizza, Long> {
-    List<Pizza> findAllByUser_Id(Long userId);
+
 }
