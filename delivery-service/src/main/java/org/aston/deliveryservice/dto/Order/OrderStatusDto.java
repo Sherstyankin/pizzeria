@@ -1,7 +1,8 @@
 package org.aston.deliveryservice.dto.Order;
 
-import org.aston.deliveryservice.constants.CourierStatus;
 import lombok.Builder;
+import org.aston.deliveryservice.constants.CourierStatus;
 
 @Builder
-public record OrderStatusDto(CourierStatus status) {}
+public record OrderStatusDto(CourierStatus status) {
+}

@@ -2,6 +2,7 @@ package org.aston.registrationservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.aston.registrationservice.dto.PizzaDto;
+import org.aston.registrationservice.dto.ResponsePizzaDto;
 import org.aston.registrationservice.entity.Pizza;
 import org.aston.registrationservice.entity.User;
 import org.aston.registrationservice.exceptions.ObjectNotFoundException;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,15 +41,18 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
 
+    @Override
+    public void saveNewPizza(List<PizzaDto> pizzaDtos) {
+        User user = userRepository.findById(pizzaDtos.get(0).userId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + pizzaDtos.get(0).userId()));
 
-@Override
-public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
-    User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
-
-    List<Pizza> pizzas = new ArrayList<>();
-
-    for (PizzaDto pizzaDto : pizzaDtos) {
+        //List<Pizza> pizzas = new ArrayList<>();
+        List<Pizza> pizzas = pizzaDtos.stream()
+                .map(dto -> pizzaMapper.toPizza(dto))
+                .peek(dto -> dto.setUser(user))
+                .toList();
+        pizzaRepository.saveAll(pizzas);
+    /*for (PizzaDto pizzaDto : pizzaDtos) {
         List<Pizza> existingPizzas = pizzaRepository.findByUserIdAndPizzaName(userId, pizzaDto.pizzaName());
         if (!existingPizzas.isEmpty()) {
             Pizza existingPizza = existingPizzas.get(0);
@@ -64,19 +67,18 @@ public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
     }
 
     // Сохраняем новые пиццы
-    List<Pizza> savedPizzas = pizzaRepository.saveAll(pizzas);
+    List<Pizza> savedPizzas =
 
     // Обновляем список pizzaDtos с обновленными и новыми пиццами
     List<PizzaDto> updatedPizzaDtos = Stream.concat(savedPizzas.stream().map(pizzaMapper::toPizzaDto), pizzaDtos.stream())
             .collect(Collectors.toList());
 
-    return updatedPizzaDtos;
-}
+    return updatedPizzaDtos;*/
+    }
 
 
     @Override
     public List<PizzaDto> updatePizza(Long id, List<PizzaDto> pizzaDtos) {
-
         List<PizzaDto> updatedPizzas = new ArrayList<>();
         for (PizzaDto pizzaDto : pizzaDtos) {
             Pizza pizza = pizzaRepository.findById(id)
@@ -93,10 +95,10 @@ public List<PizzaDto> saveNewPizza(Long userId, List<PizzaDto> pizzaDtos) {
     }
 
     @Override
-    public List<PizzaDto> getPizzasByUserId(Long userId) {
+    public List<ResponsePizzaDto> getPizzasByUserId(Long userId) {
         List<Pizza> pizzas = pizzaRepository.findByUserId(userId);
         return pizzas.stream()
-                .map(pizzaMapper::toPizzaDto)
+                .map(pizzaMapper::toResponsePizzaDto)
                 .collect(Collectors.toList());
     }
 

@@ -7,7 +7,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper (componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);

@@ -1,7 +1,6 @@
 package org.aston.registrationservice.service;
 
 import org.aston.registrationservice.dto.UserDto;
-import org.aston.registrationservice.entity.User;
 
 import java.util.List;
 import java.util.Optional;

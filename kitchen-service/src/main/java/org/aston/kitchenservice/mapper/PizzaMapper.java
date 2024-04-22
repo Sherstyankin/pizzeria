@@ -9,7 +9,10 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface PizzaMapper {
     PizzaMapper INSTANCE = Mappers.getMapper(PizzaMapper.class);
+
     PizzaDto toPizzaDto(Pizza pizza);
+
     Pizza toPizza(PizzaDto pizzaDto);
+
     PizzaShortDto toPizzaShortDto(PizzaDto pizzaDto);
 }

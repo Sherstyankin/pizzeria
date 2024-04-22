@@ -1,8 +1,10 @@
 package org.aston.deliveryservice.dto.User;
 
-import java.util.List;
-import org.aston.deliveryservice.entity.Pizza;
 import lombok.Builder;
+import org.aston.deliveryservice.entity.Pizza;
+
+import java.util.List;
 
 @Builder
-public record UserDto(long userId, List<Pizza> pizzas) {}
+public record UserDto(long userId, List<Pizza> pizzas) {
+}

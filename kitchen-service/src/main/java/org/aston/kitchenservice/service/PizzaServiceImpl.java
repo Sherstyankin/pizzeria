@@ -47,21 +47,21 @@ public class PizzaServiceImpl implements PizzaService {
     public DeliveryDto makePizza(OrderDto orderDto) {
 
         List<Pizza> pizzas = orderDto.pizzaIds().stream()
-                .map(this::getPizza).toList();
+                .map(this::getPizza)
+                .toList();
 
 
         DeliveryDto deliveryDto = DeliveryDto.builder()
-                .pizzaList(pizzas)
+                .pizzas(pizzas)
                 .orderId(orderDto.orderId())
                 .build();
 
-        //deliveryClient.sendDeliveryDto(deliveryDto);
+        deliveryClient.sendDeliveryDto(deliveryDto);
 
         return deliveryDto;
     }
 
     private Pizza getPizza(long id) {
-
         return pizzaRepository.findById(id)
                 .orElseThrow(() -> new PizzaNotFoundException(id));
     }

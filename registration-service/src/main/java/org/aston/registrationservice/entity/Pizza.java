@@ -24,7 +24,7 @@ public class Pizza {
     private String pizzaName;
 
     @Column(name = "COUNT")
-    private Integer count;
+    private Long count;
     @ManyToOne(cascade = CascadeType.ALL) //, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;

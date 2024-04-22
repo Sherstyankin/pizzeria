@@ -1,11 +1,11 @@
 package org.aston.deliveryservice.repository;
 
-import java.util.List;
-
 import org.aston.deliveryservice.entity.Pizza;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface PizzaRepository extends CrudRepository<Pizza, Long> {
 

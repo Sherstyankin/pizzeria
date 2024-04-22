@@ -28,11 +28,11 @@ services:
     build: ./registration-service
     container_name: registration-service
     ports:
-      - "9096:9095"
+      - "9096:9096"
     depends_on:
       - registration-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://registration-db:5432/orders
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://registration-db:5432/users
       - SPRING_DATASOURCE_USER=root
       - SPRING_DATASOURCE_PASSWORD=root
       - POSTGRES_DRIVER=org.postgresql.Driver
@@ -43,7 +43,7 @@ services:
     ports:
       - "6543:5432"
     environment:
-      - POSTGRES_DB=orders
+      - POSTGRES_DB=users
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DRIVER=org.postgresql.Driver
@@ -52,7 +52,7 @@ services:
     build: ./delivery-service
     container_name: delivery-service
     ports:
-      - "9097:9095"
+      - "9097:9097"
     depends_on:
       - delivery-db
     environment:
@@ -76,7 +76,7 @@ services:
     build: ./kitchen-service
     container_name: kitchen-service
     ports:
-      - "9098:9095"
+      - "9098:9098"
     depends_on:
       - kitchen-db
     environment:

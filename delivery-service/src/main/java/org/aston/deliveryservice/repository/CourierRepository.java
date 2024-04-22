@@ -1,14 +1,14 @@
 package org.aston.deliveryservice.repository;
 
-import java.util.List;
-
+import jakarta.transaction.Transactional;
 import org.aston.deliveryservice.constants.CourierStatus;
 import org.aston.deliveryservice.entity.Courier;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 public interface CourierRepository extends CrudRepository<Courier, Long> {
     @Query(value = "SELECT * FROM couriers WHERE status = 0", nativeQuery = true)

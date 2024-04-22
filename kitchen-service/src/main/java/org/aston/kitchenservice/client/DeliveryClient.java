@@ -24,7 +24,7 @@ public class DeliveryClient {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(deliveryDto)
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
     }
 }

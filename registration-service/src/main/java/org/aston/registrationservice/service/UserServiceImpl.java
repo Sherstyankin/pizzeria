@@ -4,15 +4,12 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.aston.registrationservice.dto.UserDto;
-import org.aston.registrationservice.entity.Role;
 import org.aston.registrationservice.entity.User;
 import org.aston.registrationservice.exceptions.ObjectNotFoundException;
 import org.aston.registrationservice.mapper.UserMapper;
 import org.aston.registrationservice.repository.UserRepository;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Optional;

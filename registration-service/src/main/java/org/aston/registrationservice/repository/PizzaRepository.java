@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface PizzaRepository extends JpaRepository<Pizza, Long> {
     List<Pizza> findByUserId(Long userId);
-   List<Pizza>  findByUserIdAndPizzaName(Long userId, String pizzaName);
+
+    List<Pizza> findByUserIdAndPizzaName(Long userId, String pizzaName);
 }

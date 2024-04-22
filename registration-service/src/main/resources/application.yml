@@ -1,11 +1,11 @@
 spring:
   application:
     name: registration-service
-  datasource:
-      driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/pizzeria
-      username: postgres
-      password: root
+  #datasource:
+  #    driver-class-name: org.postgresql.Driver
+  #    url: jdbc:postgresql://localhost:5432/pizzeria
+  #    username: postgres
+  #    password: root
   jpa:
     show-sql: true
     properties:
@@ -13,10 +13,10 @@ spring:
         ddl-auto: update
 
 
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+  #liquibase:
+  #  change-log: classpath:db/changelog/db.changelog-master.yaml
 server:
-  port: 9094
+  port: 9096
   servlet:
     context-path: /
 jwt:

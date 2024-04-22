@@ -8,6 +8,6 @@ import java.util.List;
 @Builder
 public record DeliveryDto(
         Long orderId,
-        List<Pizza> pizzaList
+        List<Pizza> pizzas
 ) {
 }

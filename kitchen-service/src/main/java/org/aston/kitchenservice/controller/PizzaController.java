@@ -7,12 +7,7 @@ import org.aston.kitchenservice.dto.pizzaDto.PizzaDto;
 import org.aston.kitchenservice.dto.pizzaDto.PizzaShortDto;
 import org.aston.kitchenservice.mapper.PizzaMapper;
 import org.aston.kitchenservice.service.PizzaService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
